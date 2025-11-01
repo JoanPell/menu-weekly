@@ -1,0 +1,212 @@
+.print-view {
+  min-height: 100vh;
+  background: var(--color-sage-light);
+  padding: 2rem;
+}
+
+.print-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.print-content {
+  background: var(--color-cream);
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.print-title {
+  text-align: center;
+  color: var(--color-black);
+  margin: 0 0 2rem 0;
+  font-size: 2.5rem;
+}
+
+.weekly-table {
+  margin-bottom: 3rem;
+  overflow-x: auto;
+}
+
+.weekly-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-white);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.weekly-table th {
+  background: var(--color-sage);
+  color: var(--color-white);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.weekly-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-beige);
+  color: var(--color-black);
+}
+
+.weekly-table tr:last-child td {
+  border-bottom: none;
+}
+
+.weekly-table tr:hover {
+  background: var(--color-sage-light);
+}
+
+.day-cell {
+  font-weight: 600;
+  color: var(--color-sage-dark);
+}
+
+.shopping-list-section {
+  margin-top: 2rem;
+}
+
+.shopping-list-section h2 {
+  color: var(--color-black);
+  margin: 0 0 1.5rem 0;
+  font-size: 2rem;
+}
+
+.shopping-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.8rem;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: var(--color-white);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-beige);
+}
+
+.shopping-item:hover {
+  background: var(--color-sage-light);
+  border-color: var(--color-sage);
+}
+
+.shopping-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.shopping-item label {
+  cursor: pointer;
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--color-black);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shopping-item input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+  color: var(--color-gray);
+}
+
+.shopping-item input[type="checkbox"]:checked + label .quantity {
+  opacity: 0.5;
+}
+
+.item-name {
+  flex: 1;
+}
+
+.quantity {
+  color: var(--color-sage-dark);
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  background: var(--color-sage-light);
+  padding: 0.2rem 0.8rem;
+  border-radius: 9999px;
+}
+
+.empty-message {
+  text-align: center;
+  color: var(--color-gray);
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Estilos para impresión */
+@media print {
+  .print-view {
+    background: white;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-content {
+    box-shadow: none;
+    padding: 1rem;
+  }
+
+  .print-title {
+    color: black;
+  }
+
+  .weekly-table th {
+    background: #333 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .shopping-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .shopping-list-section {
+    page-break-before: always;
+  }
+}
+
+@media (max-width: 768px) {
+  .print-view {
+    padding: 1rem;
+  }
+
+  .print-content {
+    padding: 1.5rem;
+  }
+
+  .print-title {
+    font-size: 1.8rem;
+  }
+
+  .weekly-table {
+    font-size: 0.85rem;
+  }
+
+  .weekly-table th,
+  .weekly-table td {
+    padding: 0.6rem;
+  }
+
+  .shopping-grid {
+    grid-template-columns: 1fr;
+  }
+}
