@@ -55,13 +55,15 @@ function MealSelector({ mealType, onSelect, onClose, currentMeal }) {
               <div
                 key={option.id}
                 className={`recipe-card ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
-                onClick={() => !isExpanded && handleSelect(option)}
               >
                 <div
                   className="recipe-card-header"
                   onClick={(e) => {
-                    e.stopPropagation()
-                    toggleExpand(option.id)
+                    if (isExpanded) {
+                      toggleExpand(option.id)
+                    } else {
+                      handleSelect(option)
+                    }
                   }}
                 >
                   <div className="recipe-info">
