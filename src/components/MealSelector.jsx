@@ -12,6 +12,7 @@ const mealTypeLabels = {
 function MealSelector({ mealType, onSelect, onClose, currentMeal }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedId, setExpandedId] = useState(null)
+  const [searchExpanded, setSearchExpanded] = useState(false)
 
   const options = menuOptions[mealType] || []
 
@@ -37,13 +38,36 @@ function MealSelector({ mealType, onSelect, onClose, currentMeal }) {
         </div>
 
         <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search recipes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            autoFocus
-          />
+          {!searchExpanded ? (
+            <button
+              className="btn-search-toggle"
+              onClick={() => setSearchExpanded(true)}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+            </button>
+          ) : (
+            <div className="search-input-container">
+              <input
+                type="text"
+                placeholder="Search recipes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                autoFocus
+              />
+              <button
+                className="btn-search-collapse"
+                onClick={() => {
+                  setSearchExpanded(false)
+                  setSearchTerm('')
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="recipes-list">
