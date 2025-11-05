@@ -4,23 +4,24 @@ import './WeeklyPlanner.css'
 
 const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
 const diasLabel = {
-  lunes: 'Lunes',
-  martes: 'Martes',
-  miercoles: 'Miércoles',
-  jueves: 'Jueves',
-  viernes: 'Viernes',
-  sabado: 'Sábado',
-  domingo: 'Domingo'
+  lunes: 'Mon',
+  martes: 'Tue',
+  miercoles: 'Wed',
+  jueves: 'Thu',
+  viernes: 'Fri',
+  sabado: 'Sat',
+  domingo: 'Sun'
 }
 
 const mealTypes = [
-  { key: 'desayuno', label: 'Desayuno', emoji: '☕' },
-  { key: 'almuerzo', label: 'Almuerzo', emoji: '🥪' },
-  { key: 'comida', label: 'Comida', emoji: '🍽️' },
-  { key: 'cena', label: 'Cena', emoji: '🌙' }
+  { key: 'desayuno', label: 'Breakfast' },
+  { key: 'almuerzo', label: 'Lunch' },
+  { key: 'comida', label: 'Snack' },
+  { key: 'cena', label: 'Dinner' }
 ]
 
 function WeeklyPlanner({ weeklyMenu, updateMeal }) {
+  const [selectedDay, setSelectedDay] = useState('lunes')
   const [selectedSlot, setSelectedSlot] = useState(null)
 
   const openSelector = (day, mealType) => {
@@ -38,49 +39,49 @@ function WeeklyPlanner({ weeklyMenu, updateMeal }) {
     }
   }
 
-  const removeMeal = (day, mealType, e) => {
-    e.stopPropagation()
-    updateMeal(day, mealType, null)
-  }
-
   return (
     <div className="weekly-planner">
-      <div className="planner-grid">
+      {/* Pills de días */}
+      <div className="days-pills">
         {dias.map(day => (
-          <div key={day} className="day-column">
-            <h2 className="day-header">{diasLabel[day]}</h2>
-
-            {mealTypes.map(({ key, label, emoji }) => (
-              <div
-                key={key}
-                className={`meal-slot ${weeklyMenu[day][key] ? 'filled' : 'empty'}`}
-                onClick={() => openSelector(day, key)}
-              >
-                <div className="meal-slot-header">
-                  <span className="meal-emoji">{emoji}</span>
-                  <span className="meal-label">{label}</span>
-                </div>
-
-                {weeklyMenu[day][key] ? (
-                  <div className="meal-content">
-                    <p className="meal-name">{weeklyMenu[day][key].nombre}</p>
-                    <button
-                      className="btn-remove"
-                      onClick={(e) => removeMeal(day, key, e)}
-                      title="Eliminar"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ) : (
-                  <div className="meal-placeholder">
-                    <span>+ Seleccionar</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <button
+            key={day}
+            className={`day-pill ${selectedDay === day ? 'active' : ''}`}
+            onClick={() => setSelectedDay(day)}
+          >
+            {diasLabel[day]}
+          </button>
         ))}
+      </div>
+
+      {/* Cards de comidas para el día seleccionado */}
+      <div className="meals-container">
+        {mealTypes.map(({ key, label }) => {
+          const meal = weeklyMenu[selectedDay][key]
+          return (
+            <div
+              key={key}
+              className={`meal-card ${meal ? 'has-meal' : ''}`}
+            >
+              <div className="meal-card-header">
+                <span className="meal-label">{label}</span>
+                <button
+                  className="btn-edit"
+                  onClick={() => openSelector(selectedDay, key)}
+                  title="Editar comida"
+                >
+                  ✏️
+                </button>
+              </div>
+
+              {meal ? (
+                <div className="meal-name">{meal.nombre}</div>
+              ) : (
+                <div className="meal-placeholder">No meal selected</div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {selectedSlot && (

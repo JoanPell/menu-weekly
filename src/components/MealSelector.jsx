@@ -3,14 +3,15 @@ import { menuOptions } from '../data/menuOptions'
 import './MealSelector.css'
 
 const mealTypeLabels = {
-  desayuno: '☕ Desayuno',
-  almuerzo: '🥪 Almuerzo',
-  comida: '🍽️ Comida',
-  cena: '🌙 Cena'
+  desayuno: 'Breakfast',
+  almuerzo: 'Lunch',
+  comida: 'Snack',
+  cena: 'Dinner'
 }
 
 function MealSelector({ mealType, onSelect, onClose, currentMeal }) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [expandedId, setExpandedId] = useState(null)
 
   const options = menuOptions[mealType] || []
 
@@ -18,54 +19,101 @@ function MealSelector({ mealType, onSelect, onClose, currentMeal }) {
     option.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id)
+  }
+
+  const handleSelect = (option) => {
+    onSelect(option)
+    onClose()
+  }
+
   return (
     <div className="meal-selector-overlay" onClick={onClose}>
       <div className="meal-selector" onClick={(e) => e.stopPropagation()}>
         <div className="selector-header">
-          <h2>{mealTypeLabels[mealType]}</h2>
+          <h2>Select Recipe</h2>
           <button className="btn-close" onClick={onClose}>✕</button>
         </div>
 
         <div className="search-box">
           <input
             type="text"
-            placeholder="Buscar..."
+            placeholder="Search recipes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
           />
         </div>
 
-        <div className="options-grid">
-          {filteredOptions.map(option => (
-            <div
-              key={option.id}
-              className={`meal-card ${currentMeal?.id === option.id ? 'selected' : ''}`}
-              onClick={() => onSelect(option)}
-            >
-              <h3>{option.nombre}</h3>
-              <div className="meal-ingredients">
-                {option.ingredientes.map((ing, idx) => {
-                  if (typeof ing === 'string') {
-                    return <span key={idx} className="ingredient-tag">{ing}</span>
-                  }
+        <div className="recipes-list">
+          {filteredOptions.map(option => {
+            const isExpanded = expandedId === option.id
+            const isSelected = currentMeal?.id === option.id
 
-                  const cantidadText = ing.cantidad !== null ? `${ing.cantidad}` : ''
-                  const unidadText = ing.unidad !== null ? ing.unidad : ''
-                  const fullText = cantidadText && unidadText
-                    ? `${ing.nombre} (${cantidadText}${unidadText})`
-                    : ing.nombre
+            return (
+              <div
+                key={option.id}
+                className={`recipe-card ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
+                onClick={() => !isExpanded && handleSelect(option)}
+              >
+                <div
+                  className="recipe-card-header"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleExpand(option.id)
+                  }}
+                >
+                  <div className="recipe-info">
+                    <h3>{option.nombre}</h3>
+                    {isExpanded && (
+                      <span className="ingredient-count">
+                        {option.ingredientes.length} ingredients
+                      </span>
+                    )}
+                  </div>
+                  <button className="btn-expand" onClick={(e) => {
+                    e.stopPropagation()
+                    toggleExpand(option.id)
+                  }}>
+                    {isExpanded ? '▲' : '▼'}
+                  </button>
+                </div>
 
-                  return <span key={idx} className="ingredient-tag">{fullText}</span>
-                })}
+                {isExpanded && (
+                  <div className="recipe-card-content" onClick={(e) => e.stopPropagation()}>
+                    <div className="ingredients-list">
+                      {option.ingredientes.map((ing, idx) => {
+                        if (typeof ing === 'string') {
+                          return (
+                            <div key={idx} className="ingredient-item">
+                              <span className="ingredient-name">{ing}</span>
+                            </div>
+                          )
+                        }
+
+                        return (
+                          <div key={idx} className="ingredient-item">
+                            <span className="ingredient-name">{ing.nombre}</span>
+                            {ing.cantidad && (
+                              <span className="ingredient-amount">
+                                {ing.cantidad}{ing.unidad || ''}
+                              </span>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {filteredOptions.length === 0 && (
           <div className="no-results">
-            No se encontraron opciones para "{searchTerm}"
+            No recipes found for "{searchTerm}"
           </div>
         )}
       </div>

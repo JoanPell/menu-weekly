@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import WeeklyPlanner from './components/WeeklyPlanner'
 import PrintView from './components/PrintView'
+import SplashScreen from './components/SplashScreen'
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true)
   const [weeklyMenu, setWeeklyMenu] = useState(() => {
     const saved = localStorage.getItem('weeklyMenu')
     return saved ? JSON.parse(saved) : {
@@ -49,25 +51,26 @@ function App() {
     }
   }
 
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />
+  }
+
   if (showPrintView) {
     return <PrintView weeklyMenu={weeklyMenu} onBack={() => setShowPrintView(false)} />
   }
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>🍽️ Planificador de Menú Semanal</h1>
-        <div className="header-actions">
-          <button onClick={clearMenu} className="btn-secondary">
-            Limpiar Todo
-          </button>
-          <button onClick={() => setShowPrintView(true)} className="btn-primary">
-            Ver e Imprimir Menú
-          </button>
-        </div>
-      </header>
-
       <WeeklyPlanner weeklyMenu={weeklyMenu} updateMeal={updateMeal} />
+
+      <div className="bottom-actions">
+        <button onClick={clearMenu} className="btn-clean">
+          Clean
+        </button>
+        <button onClick={() => setShowPrintView(true)} className="btn-shopping">
+          Shopping List
+        </button>
+      </div>
     </div>
   )
 }
