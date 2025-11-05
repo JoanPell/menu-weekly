@@ -18,7 +18,7 @@
 /* Pills de días */
 .days-pills {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 1.5rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
@@ -35,11 +35,11 @@
 
 .day-pill {
   flex-shrink: 0;
-  padding: 0.4rem 0.7rem;
+  padding: 0.4rem 0.65rem;
   border-radius: 20px;
   border: 1px solid #ccc;
   background: white;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -69,6 +69,11 @@
   border-radius: 12px;
   padding: 1rem;
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.meal-card:hover {
+  border-color: #ccc;
 }
 
 .meal-card.has-meal {
@@ -123,6 +128,17 @@
 .meal-placeholder {
   color: #999;
   font-size: 0.9rem;
+}
+
+@media (max-width: 400px) {
+  .day-pill {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .days-pills {
+    gap: 0.3rem;
+  }
 }
 
 @media (min-width: 768px) {

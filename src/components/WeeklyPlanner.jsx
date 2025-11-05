@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import MealSelector from './MealSelector'
+import { menuOptions } from '../data/menuOptions'
 import './WeeklyPlanner.css'
 
 const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
@@ -40,7 +41,12 @@ function WeeklyPlanner({ weeklyMenu, updateMeal }) {
   }
 
   const selectRandomMeal = (day, mealType) => {
-    openSelector(day, mealType)
+    const options = menuOptions[mealType] || []
+    if (options.length > 0) {
+      const randomIndex = Math.floor(Math.random() * options.length)
+      const randomMeal = options[randomIndex]
+      updateMeal(day, mealType, randomMeal)
+    }
   }
 
   return (
@@ -66,12 +72,16 @@ function WeeklyPlanner({ weeklyMenu, updateMeal }) {
             <div
               key={key}
               className={`meal-card ${meal ? 'has-meal' : ''}`}
+              onClick={() => openSelector(selectedDay, key)}
             >
               <div className="meal-card-header">
                 <span className="meal-label">{label}</span>
                 <button
                   className="btn-random"
-                  onClick={() => selectRandomMeal(selectedDay, key)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    selectRandomMeal(selectedDay, key)
+                  }}
                   title="Random recipe"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
