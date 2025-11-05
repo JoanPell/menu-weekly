@@ -197,7 +197,7 @@
 .recipe-card.selected {
   background: #FFFFB0 !important;
   border-color: #000 !important;
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .recipe-card.expanded {
